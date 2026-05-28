@@ -421,7 +421,7 @@
                     window.location.href = 'app.html';
                 }
             } catch (e) {
-                console.log('No hay sesión activa');
+                console.error('Error al verificar sesión activa:', e);
             }
         }
 
@@ -470,6 +470,7 @@
                 }, 800);
 
             } catch (e) {
+                console.error('Error en iniciarSesion:', e);
                 mostrarMensaje('login', 'Error de conexión. Intenta de nuevo.', 'error');
                 setCargando('login', false);
             }
@@ -539,6 +540,7 @@
                 setCargando('registro', false);
 
             } catch (e) {
+                console.error('Error en registrarse:', e);
                 mostrarMensaje('registro', 'Error de conexión. Intenta de nuevo.', 'error');
                 setCargando('registro', false);
             }

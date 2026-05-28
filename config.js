@@ -36,37 +36,19 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 const ADMIN_PASSWORD = 'admin123';
 
 // ============================================================
-// CONFIGURACIÓN DE PROTECCIÓN (Anti-clonación)
-// ============================================================
-// Dominios permitidos para desplegar la aplicación
-// Por defecto: GitHub Pages (github.io)
-// Puedes agregar tu propio dominio personalizado si lo deseas
-const DOMINIOS_PERMITIDOS = [
-    'github.io',       // GitHub Pages
-    // 'tudominio.com', // ← Agrega aquí tu dominio personalizado si lo tienes
-];
-
-// ============================================================
 // NO MODIFICAR NADA DE AQUÍ EN ADELANTE
 // ============================================================
 
-// Inicializar cliente de Supabase
-// Usamos 'window.supabase' porque la CDN expone un objeto global 'supabase'
-// Luego lo asignamos a nuestra propia constante 'supabase' para usarlo localmente
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+// ⚠️ IMPORTANTE: Usamos window.supabase en lugar de const supabase.
+// La CDN de Supabase (@supabase/supabase-js v2) ya declara
+// 'var supabase' a nivel global. Usar 'const supabase = ...'
+// causaría un error: "Identifier 'supabase' has already been declared".
+window.supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 /**
- * Verifica si el dominio actual está en la lista de permitidos.
- * Esto evita que alguien clone el repositorio y lo despliegue
- * en otro lugar sin autorización.
+ * Verificación de dominio — DESACTIVADA.
+ * Ahora permite ejecución en cualquier dominio.
  */
 function verificarDominio() {
-    const hostname = window.location.hostname.toLowerCase();
-    
-    // Si estamos en entorno local (localhost) permitir el desarrollo
-    if (hostname === 'localhost' || hostname === '127.0.0.1') {
-        return true;
-    }
-    
-    return DOMINIOS_PERMITIDOS.some(dominio => hostname.includes(dominio));
+    return true; // ✅ Desactivado
 }
