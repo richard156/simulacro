@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ExamenApp - Administración</title>
+
+    <!-- ============================================================
+         ESTILOS
+         ============================================================ -->
+    <style>
+        /* ---------- RESET & GLOBAL ---------- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+
+        /* ---------- CONTENEDOR ---------- */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* ---------- BARRA SUPERIOR ---------- */
+        .top-bar {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+            color: white;
+        }
+
+        .top-bar h1 {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .top-bar .acciones {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-top {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-top:hover {
+            background: rgba(255, 255, 255, 0.35);
+            transform: translateY(-1px);
+        }
+
+        /* ---------- TARJETA ---------- */
+        .card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            padding: 35px 30px;
+            margin-bottom: 20px;
+            animation: fadeInUp 0.4s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card h2 {
+            color: #333;
+            font-size: 22px;
+            margin-bottom: 8px;
+        }
+
+        .card p {
+            color: #888;
+            font-size: 14px;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .card p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* ---------- LOGIN ADMIN ---------- */
+        #adminLogin {
+            text-align: center;
+        }
+
+        #adminLogin .icono {
+            font-size: 60px;
+            margin-bottom: 15px;
+        }
+
+        #adminLogin .campo {
+            max-width: 350px;
+            margin: 0 auto 15px;
+            text-align: left;
+        }
+
+        .campo {
+            margin-bottom: 20px;
+        }
+
+        .campo label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: #555;
+            font-size: 14px;
+        }
+
+        .campo input, .campo textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: border-color 0.3s ease;
+            outline: none;
+            font-family: inherit;
+        }
+
+        .campo input:focus, .campo textarea:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15);
+        }
+
+        /* ---------- BOTONES GENÉRICOS ---------- */
+        .btn {
+            padding: 14px 24px;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primario {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primario:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+        }
+
+        .btn-secundario {
+            background: #f5f5f5;
+            color: #555;
+        }
+
+        .btn-secundario:hover {
+            background: #e8e8e8;
+        }
+
+        .btn-peligro {
+            background: linear-gradient(135deg, #f44336, #d32f2f);
+            color: white;
+            box-shadow: 0 4px 15px rgba(244, 67, 54, 0.4);
+        }
+
+        .btn-peligro:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(244, 67, 54, 0.5);
+        }
+
+        .btn-exito {
+            background: linear-gradient(135deg, #4caf50, #388e3c);
+            color: white;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
+        }
+
+        .btn-exito:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.5);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .btn-block {
+            width: 100%;
+        }
+
+        /* ---------- ÁREA DE DROP / SUBIR CSV ---------- */
+        .drop-zone {
+            border: 3px dashed #d0d0d0;
+            border-radius: 15px;
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #fafafa;
+            margin-bottom: 20px;
+        }
+
+        .drop-zone:hover, .drop-zone.dragging {
+            border-color: #667eea;
+            background: #f0f2ff;
+        }
+
+        .drop-zone .icono-grande {
+            font-size: 50px;
+            margin-bottom: 10px;
+        }
+
+        .drop-zone p {
+            color: #888;
+            font-size: 15px;
+            margin-bottom: 0;
+        }
+
+        .drop-zone .formato {
+            font-size: 12px;
+            color: #bbb;
+            margin-top: 8px;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        /* ---------- INFORMACIÓN DEL ARCHIVO ---------- */
+        .file-info {
+            display: none;
+            background: #f8f9ff;
+            border: 2px solid #667eea;
+            border-radius: 12px;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .file-info.visible {
+            display: flex;
+        }
+
+        .file-info .nombre {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .file-info .tamano {
+            font-size: 13px;
+            color: #888;
+        }
+
+        .file-info .btn-quitar {
+            background: none;
+            border: none;
+            color: #f44336;
+            cursor: pointer;
+            font-size: 20px;
+            padding: 4px 8px;
+            border-radius: 6px;
+            transition: background 0.2s;
+        }
+
+        .file-info .btn-quitar:hover {
+            background: #ffebee;
+        }
+
+        /* ---------- MENSAJES ---------- */
+        .mensaje {
+            padding: 14px 18px;
+            border-radius: 12px;
+            font-size: 14px;
+            display: none;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .mensaje.visible {
+            display: block;
+            animation: fadeInUp 0.3s ease;
+        }
+
+        .mensaje.exito {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #a5d6a7;
+        }
+
+        .mensaje.error {
+            background: #ffebee;
+            color: #c62828;
+            border: 1px solid #ef9a9a;
+        }
+
+        .mensaje.info {
+            background: #e3f2fd;
+            color: #1565c0;
+            border: 1px solid #bbdefb;
+        }
+
+        .mensaje.advertencia {
+            background: #fff8e1;
+            color: #ef6c00;
+            border: 1px solid #ffe082;
+        }
+
+        /* ---------- PREVISUALIZACIÓN DE CSV ---------- */
+        .preview {
+            display: none;
+            margin-bottom: 20px;
+        }
+
+        .preview.visible {
+            display: block;
+        }
+
+        .preview h3 {
+            color: #333;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .preview table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        .preview table th {
+            background: #667eea;
+            color: white;
+            padding: 10px 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .preview table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #f0f0f0;
+            color: #555;
+        }
+
+        .preview table tr:nth-child(even) {
+            background: #f8f9ff;
+        }
+
+        .preview .columna-mapping {
+            background: #f0f2ff;
+            border-radius: 10px;
+            padding: 12px 16px;
+            margin-top: 15px;
+            font-size: 13px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .preview .columna-mapping strong {
+            color: #333;
+        }
+
+        .preview .total-rows {
+            margin-top: 10px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        /* ---------- ESTADÍSTICAS DE BD ---------- */
+        .stats-bd {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 5px;
+        }
+
+        .stats-bd .stat {
+            background: #f8f9ff;
+            border-radius: 10px;
+            padding: 15px 20px;
+            flex: 1;
+            min-width: 120px;
+            text-align: center;
+        }
+
+        .stats-bd .stat .numero {
+            font-size: 28px;
+            font-weight: 800;
+            color: #667eea;
+        }
+
+        .stats-bd .stat .etiqueta {
+            font-size: 12px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 4px;
+        }
+
+        /* ---------- SPINNER ---------- */
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.6s ease infinite;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ---------- RESPONSIVE ---------- */
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+
+            .card {
+                padding: 25px 18px;
+                border-radius: 15px;
+            }
+
+            .top-bar {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .top-bar .acciones {
+                justify-content: center;
+                width: 100%;
+            }
+
+            .drop-zone {
+                padding: 25px 15px;
+            }
+
+            .drop-zone .icono-grande {
+                font-size: 40px;
+            }
+
+            .preview table {
+                font-size: 12px;
+            }
+
+            .preview table th,
+            .preview table td {
+                padding: 8px 10px;
+            }
+
+            .stats-bd .stat {
+                padding: 12px 15px;
+                min-width: 100px;
+            }
+
+            .stats-bd .stat .numero {
+                font-size: 22px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .card {
+                padding: 18px 12px;
+            }
+
+            .stats-bd {
+                flex-direction: column;
+            }
+
+            .file-info {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- ============================================================
+        BARRA SUPERIOR
+        ============================================================ -->
+        <div class="top-bar">
+            <h1>🔧 Panel de Administración</h1>
+            <div class="acciones">
+                <a href="app.html" class="btn-top">📚 Ir al Examen</a>
+                <a href="index.html" class="btn-top">🔐 Inicio</a>
+            </div>
+        </div>
+
+        <!-- ============================================================
+        TARJETA DE AUTENTICACIÓN ADMIN
+        ============================================================ -->
+        <div class="card" id="adminLogin">
+            <div class="icono">🔒</div>
+            <h2>Acceso Administrativo</h2>
+            <p>Ingresa la contraseña de administrador para acceder al panel.</p>
+            <div class="campo">
+                <label for="adminPasswordInput">Contraseña de Administrador</label>
+                <input type="password" id="adminPasswordInput" placeholder="Ingresa la contraseña" autocomplete="off">
+            </div>
+            <button class="btn btn-primario btn-block" onclick="autenticarAdmin()">
+                🔑 Ingresar
+            </button>
+            <div id="mensajeAuthAdmin" class="mensaje"></div>
+        </div>
+
+        <!-- ============================================================
+        CONTENIDO ADMIN (protegido)
+        ============================================================ -->
+        <div id="adminContent" style="display:none;">
+
+            <!-- Estadísticas de la base de datos -->
+            <div class="card">
+                <h2>📊 Estado de la Base de Datos</h2>
+                <p>Resumen de las preguntas almacenadas en Supabase.</p>
+                <div class="stats-bd">
+                    <div class="stat">
+                        <div class="numero" id="totalPreguntas">-</div>
+                        <div class="etiqueta">Preguntas</div>
+                    </div>
+                    <div class="stat">
+                        <button class="btn btn-peligro" onclick="vaciarBD()" style="padding:8px 16px;font-size:13px;margin-top:5px;">
+                            🗑️ Vaciar BD
+                        </button>
+                        <div class="etiqueta" style="margin-top:5px;">Eliminar todo</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Subir CSV -->
+            <div class="card">
+                <h2>📂 Subir Archivo CSV</h2>
+                <p>
+                    Sube un archivo CSV con preguntas de opción múltiple. El sistema detectará automáticamente 
+                    las columnas buscando palabras clave como "pregunta", "alternativa", "opción", "respuesta", etc.
+                    Los datos se insertarán directamente en Supabase.
+                </p>
+
+                <!-- Zona de drop -->
+                <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
+                    <div class="icono-grande">📄</div>
+                    <p><strong>Haz clic</strong> o arrastra un archivo CSV aquí</p>
+                    <div class="formato">Formatos aceptados: .csv (separado por comas, punto y coma o tabulaciones)</div>
+                    <input type="file" id="fileInput" accept=".csv" onchange="manejarArchivo(event)">
+                </div>
+
+                <!-- Info del archivo seleccionado -->
+                <div class="file-info" id="fileInfo">
+                    <div>
+                        <div class="nombre" id="fileName">-</div>
+                        <div class="tamano" id="fileSize">-</div>
+                    </div>
+                    <button class="btn-quitar" onclick="quitarArchivo()" title="Quitar archivo">✕</button>
+                </div>
+
+                <!-- Previsualización -->
+                <div class="preview" id="preview">
+                    <h3>📋 Vista previa del CSV</h3>
+                    <div id="previewTable"></div>
+                    <div class="columna-mapping" id="columnMapping">
+                        Analizando columnas...
+                    </div>
+                    <div class="total-rows" id="totalRows">-</div>
+                </div>
+
+                <!-- Mensajes -->
+                <div id="mensajeCSV" class="mensaje"></div>
+
+                <!-- Acciones -->
+                <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                    <button class="btn btn-exito" id="btnSubir" onclick="subirPreguntas()" disabled>
+                        📤 Subir a Supabase
+                    </button>
+                    <button class="btn btn-secundario" onclick="document.getElementById('fileInput').click()">
+                        🔄 Seleccionar otro archivo
+                    </button>
+                </div>
+            </div>
+
+            <!-- Vista de preguntas existentes -->
+            <div class="card">
+                <h2>📖 Preguntas en la Base de Datos</h2>
+                <p>Lista de todas las preguntas almacenadas.</p>
+                <div id="listaPreguntas">
+                    <p style="text-align:center;color:#aaa;">Cargando...</p>
+                </div>
+                <div style="margin-top:15px;">
+                    <button class="btn btn-peligro" onclick="vaciarBD()">
+                        🗑️ Vaciar Base de Datos
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ============================================================
+    SCRIPTS
+    ============================================================ -->
+    <!-- Supabase JS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
+    <!-- Papa Parse para procesar CSV -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+
+    <!-- Configuración -->
+    <script src="config.js"></script>
+
+    <script>
+        // ============================================================
+        // VERIFICACIÓN DE DOMINIO (Protección anti-clonación)
+        // ============================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!verificarDominio()) {
+                document.body.innerHTML = `
+                    <div style="text-align:center;padding:40px;font-family:sans-serif;">
+                        <h1 style="color:#d32f2f;">🔒 Acceso Denegado</h1>
+                        <p style="color:#666;margin-top:20px;font-size:18px;">
+                            Esta aplicación no está autorizada para ejecutarse en este dominio.
+                        </p>
+                        <p style="color:#999;margin-top:10px;">
+                            Solo funciona en dominios autorizados (GitHub Pages).
+                        </p>
+                    </div>
+                `;
+                return;
+            }
+        });
+
+        // ============================================================
+        // ESTADO GLOBAL
+        // ============================================================
+        let datosCSV = null;        // Datos parseados del CSV
+        let mapeoColumnas = {};     // Mapeo de columnas detectadas
+        let csvAutenticado = false; // ¿Está autenticado en el panel admin?
+
+        // ============================================================
+        // AUTENTICACIÓN ADMIN
+        // ============================================================
+        function autenticarAdmin() {
+            const password = document.getElementById('adminPasswordInput').value;
+            const msg = document.getElementById('mensajeAuthAdmin');
+
+            if (password === ADMIN_PASSWORD) {
+                csvAutenticado = true;
+                document.getElementById('adminLogin').style.display = 'none';
+                document.getElementById('adminContent').style.display = 'block';
+                msg.className = 'mensaje';
+                cargarEstadisticasBD();
+                cargarListaPreguntas();
+            } else {
+                msg.className = 'mensaje visible error';
+                msg.textContent = '❌ Contraseña incorrecta. Intenta de nuevo.';
+            }
+        }
+
+        // Permitir Enter para autenticar
+        document.getElementById('adminPasswordInput').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') autenticarAdmin();
+        });
+
+        // ============================================================
+        // DRAG & DROP
+        // ============================================================
+        const dropZone = document.getElementById('dropZone');
+
+        dropZone.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            this.classList.add('dragging');
+        });
+
+        dropZone.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            this.classList.remove('dragging');
+        });
+
+        dropZone.addEventListener('drop', function(e) {
+            e.preventDefault();
+            this.classList.remove('dragging');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                procesarArchivo(files[0]);
+            }
+        });
+
+        // ============================================================
+        // MANEJO DE ARCHIVO
+        // ============================================================
+        function manejarArchivo(event) {
+            const file = event.target.files[0];
+            if (file) procesarArchivo(file);
+        }
+
+        function procesarArchivo(file) {
+            // Validar extensión
+            if (!file.name.toLowerCase().endsWith('.csv')) {
+                mostrarMensajeCSV('error', 'Solo se aceptan archivos con extensión .csv');
+                return;
+            }
+
+            // Mostrar info del archivo
+            document.getElementById('fileInfo').classList.add('visible');
+            document.getElementById('fileName').textContent = file.name;
+            document.getElementById('fileSize').textContent = formatearTamano(file.size);
+
+            // Leer el archivo
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const contenido = e.target.result;
+                parsearCSV(contenido, file.name);
+            };
+            reader.readAsText(file, 'UTF-8');
+        }
+
+        function quitarArchivo() {
+            document.getElementById('fileInput').value = '';
+            document.getElementById('fileInfo').classList.remove('visible');
+            document.getElementById('preview').classList.remove('visible');
+            document.getElementById('btnSubir').disabled = true;
+            document.getElementById('mensajeCSV').className = 'mensaje';
+            datosCSV = null;
+            mapeoColumnas = {};
+        }
+
+        function formatearTamano(bytes) {
+            if (bytes < 1024) return bytes + ' bytes';
+            if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+            return (bytes / 1048576).toFixed(1) + ' MB';
+        }
+
+        // ============================================================
+        // PARSEO DE CSV CON PAPA PARSE
+        // ============================================================
+        function parsearCSV(contenido, nombreArchivo) {
+            Papa.parse(contenido, {
+                header: true,          // Primera fila como nombres de columna
+                skipEmptyLines: true,  // Saltar líneas vacías
+                encoding: 'UTF-8',
+                complete: function(results) {
+                    if (results.errors.length > 0) {
+                        console.warn('Errores de parseo:', results.errors);
+                    }
+
+                    if (!results.data || results.data.length === 0) {
+                        mostrarMensajeCSV('error', 'El archivo CSV no contiene datos válidos.');
+                        return;
+                    }
+
+                    datosCSV = results.data;
+                    const columnas = results.meta.fields || [];
+
+                    if (columnas.length === 0) {
+                        mostrarMensajeCSV('error', 'No se pudieron detectar columnas en el CSV. ' +
+                            'Asegúrate de que la primera fila contenga los nombres de las columnas.');
+                        return;
+                    }
+
+                    // Detectar mapeo de columnas
+                    mapeoColumnas = detectarColumnas(columnas);
+
+                    // Mostrar vista previa
+                    mostrarPreview(datosCSV, columnas);
+
+                    // Validar si se detectaron las columnas necesarias
+                    validarMapeo();
+
+                    mostrarMensajeCSV('info', `Se detectaron ${datosCSV.length} filas de datos. ` +
+                        'Revisa la vista previa y haz clic en "Subir a Supabase" si todo está correcto.');
+                },
+                error: function(error) {
+                    mostrarMensajeCSV('error', 'Error al leer el archivo CSV: ' + error.message);
+                }
+            });
+        }
+
+        // ============================================================
+        // DETECCIÓN INTELIGENTE DE COLUMNAS
+        // ============================================================
+        function detectarColumnas(columnas) {
+            const mapeo = {
+                pregunta_texto: null,
+                opcion_a: null,
+                opcion_b: null,
+                opcion_c: null,
+                respuesta_correcta: null
+            };
+
+            // Palabras clave para cada campo
+            const keywords = {
+                pregunta_texto: [
+                    'pregunta', 'pregunta_texto', 'preguntatexto', 'pregunta texto',
+                    'question', 'texto pregunta', 'enunciado', 'consigna', 'item'
+                ],
+                opcion_a: [
+                    'alternativa a', 'alternativa_a', 'alternativaa', 'opcion a', 'opcion_a',
+                    'option a', 'option_a', 'a', 'alt_a', 'respuesta a'
+                ],
+                opcion_b: [
+                    'alternativa b', 'alternativa_b', 'alternativab', 'opcion b', 'opcion_b',
+                    'option b', 'option_b', 'b', 'alt_b', 'respuesta b'
+                ],
+                opcion_c: [
+                    'alternativa c', 'alternativa_c', 'alternativac', 'opcion c', 'opcion_c',
+                    'option c', 'option_c', 'c', 'alt_c', 'respuesta c'
+                ],
+                respuesta_correcta: [
+                    'respuesta correcta', 'respuesta_correcta', 'respuestacorrecta',
+                    'correcta', 'clave', 'respuesta', 'correct answer', 'answer',
+                    'd', 'solucion'
+                ]
+            };
+
+            // Normalizar nombres de columnas para comparación
+            const columnasNorm = columnas.map(col => ({
+                original: col,
+                normalizado: col.toLowerCase().trim().replace(/[_\s-]+/g, ' ')
+            }));
+
+            // Buscar cada campo requerido
+            for (const [campo, palabras] of Object.entries(keywords)) {
+                for (const col of columnasNorm) {
+                    if (palabras.some(palabra => col.normalizado.includes(palabra))) {
+                        mapeo[campo] = col.original;
+                        break;
+                    }
+                }
+            }
+
+            return mapeo;
+        }
+
+        // ============================================================
+        // VALIDAR MAPEO
+        // ============================================================
+        function validarMapeo() {
+            const camposFaltantes = [];
+            const camposEncontrados = [];
+
+            for (const [campo, columna] of Object.entries(mapeoColumnas)) {
+                if (columna) {
+                    camposEncontrados.push(campo);
+                } else {
+                    camposFaltantes.push(campo);
+                }
+            }
+
+            if (camposFaltantes.length > 0) {
+                const nombresLegibles = {
+                    pregunta_texto: 'Pregunta / Enunciado',
+                    opcion_a: 'Alternativa A',
+                    opcion_b: 'Alternativa B',
+                    opcion_c: 'Alternativa C',
+                    respuesta_correcta: 'Respuesta Correcta'
+                };
+
+                mostrarMensajeCSV('advertencia',
+                    '⚠️ No se pudieron detectar automáticamente algunas columnas: ' +
+                    camposFaltantes.map(c => nombresLegibles[c] || c).join(', ') +
+                    '.<br>Puedes continuar si tu CSV tiene un formato compatible ' +
+                    'con las columnas detectadas.'
+                );
+            }
+        }
+
+        // ============================================================
+        // MOSTRAR VISTA PREVIA
+        // ============================================================
+        function mostrarPreview(datos, columnas) {
+            const preview = document.getElementById('preview');
+            preview.classList.add('visible');
+
+            // Mostrar primeras 5 filas
+            const maxRows = Math.min(datos.length, 5);
+            let html = '<table><thead><tr>';
+            
+            // Encabezados
+            for (const col of columnas) {
+                // Marcar columna detectada
+                let clase = '';
+                for (const [campo, columna] of Object.entries(mapeoColumnas)) {
+                    if (columna === col) {
+                        clase = 'style="background:#4caf50;"';
+                        break;
+                    }
+                }
+                html += `<th ${clase}>${col}</th>`;
+            }
+            html += '</tr></thead><tbody>';
+
+            // Filas
+            for (let i = 0; i < maxRows; i++) {
+                html += '<tr>';
+                for (const col of columnas) {
+                    html += `<td>${(datos[i][col] || '-').substring(0, 60)}</td>`;
+                }
+                html += '</tr>';
+            }
+            html += '</tbody></table>';
+
+            // Si hay más filas, indicarlo
+            if (datos.length > maxRows) {
+                html += `<p style="color:#888;font-size:13px;margin-top:8px;">... y ${datos.length - maxRows} filas más</p>`;
+            }
+
+            document.getElementById('previewTable').innerHTML = html;
+
+            // Mostrar mapeo de columnas
+            const nombresLegibles = {
+                pregunta_texto: 'Pregunta',
+                opcion_a: 'Alternativa A',
+                opcion_b: 'Alternativa B',
+                opcion_c: 'Alternativa C',
+                respuesta_correcta: 'Respuesta Correcta'
+            };
+
+            let mappingHtml = '<strong>🧩 Detección de columnas:</strong><br>';
+            for (const [campo, columna] of Object.entries(mapeoColumnas)) {
+                if (columna) {
+                    mappingHtml += `✅ <strong>${nombresLegibles[campo] || campo}</strong> → columna "<em>${columna}</em>"<br>`;
+                } else {
+                    mappingHtml += `❌ <strong>${nombresLegibles[campo] || campo}</strong> → <span style="color:#f44336;">No detectada</span><br>`;
+                }
+            }
+            document.getElementById('columnMapping').innerHTML = mappingHtml;
+
+            // Total de filas
+            document.getElementById('totalRows').textContent = `Total de filas detectadas: ${datos.length}`;
+
+            // Habilitar botón de subir SOLO si se detectaron las columnas necesarias
+            const completo = mapeoColumnas.pregunta_texto && 
+                            mapeoColumnas.opcion_a && 
+                            mapeoColumnas.opcion_b && 
+                            mapeoColumnas.opcion_c && 
+                            mapeoColumnas.respuesta_correcta;
+
+            document.getElementById('btnSubir').disabled = !completo;
+            if (!completo) {
+                document.getElementById('btnSubir').title = 'No se detectaron todas las columnas necesarias';
+            } else {
+                document.getElementById('btnSubir').title = '';
+            }
+        }
+
+        // ============================================================
+        // MOSTRAR MENSAJE CSV
+        // ============================================================
+        function mostrarMensajeCSV(tipo, texto) {
+            const msg = document.getElementById('mensajeCSV');
+            msg.className = 'mensaje visible ' + tipo;
+            msg.innerHTML = texto;
+        }
+
+        // ============================================================
+        // SUBIR PREGUNTAS A SUPABASE
+        // ============================================================
+        async function subirPreguntas() {
+            if (!datosCSV || datosCSV.length === 0) {
+                mostrarMensajeCSV('error', 'No hay datos para subir. Selecciona un archivo CSV primero.');
+                return;
+            }
+
+            const btn = document.getElementById('btnSubir');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span> Subiendo...';
+
+            try {
+                // Transformar datos del CSV al formato de la base de datos
+                const preguntasInsertar = [];
+
+                for (const fila of datosCSV) {
+                    const pregunta = {
+                        pregunta_texto: (fila[mapeoColumnas.pregunta_texto] || '').trim(),
+                        opcion_a: (fila[mapeoColumnas.opcion_a] || '').trim(),
+                        opcion_b: (fila[mapeoColumnas.opcion_b] || '').trim(),
+                        opcion_c: (fila[mapeoColumnas.opcion_c] || '').trim(),
+                        respuesta_correcta: (fila[mapeoColumnas.respuesta_correcta] || '').trim().toUpperCase()
+                    };
+
+                    // Validar que la respuesta correcta sea A, B o C
+                    if (!['A', 'B', 'C'].includes(pregunta.respuesta_correcta)) {
+                        // Intentar extraer la letra de un texto más largo (ej: "Alternativa A", "Opción B")
+                        const match = pregunta.respuesta_correcta.match(/[A-C]/);
+                        if (match) {
+                            pregunta.respuesta_correcta = match[0];
+                        } else {
+                            console.warn('Fila ignorada - respuesta correcta inválida:', pregunta.respuesta_correcta);
+                            continue; // Saltar esta fila
+                        }
+                    }
+
+                    // Validar que todos los campos tengan contenido
+                    if (!pregunta.pregunta_texto || !pregunta.opcion_a || 
+                        !pregunta.opcion_b || !pregunta.opcion_c) {
+                        console.warn('Fila ignorada - campos incompletos');
+                        continue;
+                    }
+
+                    preguntasInsertar.push(pregunta);
+                }
+
+                if (preguntasInsertar.length === 0) {
+                    mostrarMensajeCSV('error', 'No se encontraron preguntas válidas en el archivo. ' +
+                        'Verifica que los datos estén completos y tengan el formato correcto.');
+                    btn.disabled = false;
+                    btn.innerHTML = '📤 Subir a Supabase';
+                    return;
+                }
+
+                // Insertar en Supabase en lotes de 50 para mejor rendimiento
+                let insertados = 0;
+                const loteSize = 50;
+
+                for (let i = 0; i < preguntasInsertar.length; i += loteSize) {
+                    const lote = preguntasInsertar.slice(i, i + loteSize);
+                    const { data, error } = await supabase
+                        .from('preguntas')
+                        .insert(lote)
+                        .select();
+
+                    if (error) {
+                        throw new Error('Error al insertar en Supabase: ' + error.message);
+                    }
+
+                    insertados += lote.length;
+                }
+
+                mostrarMensajeCSV('exito', 
+                    `✅ ¡Se insertaron <strong>${insertados}</strong> preguntas correctamente en Supabase!`
+                );
+
+                // Actualizar estadísticas
+                await cargarEstadisticasBD();
+                await cargarListaPreguntas();
+
+                // Limpiar
+                quitarArchivo();
+
+            } catch (e) {
+                console.error('Error al subir:', e);
+                mostrarMensajeCSV('error', '❌ Error al subir los datos: ' + e.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '📤 Subir a Supabase';
+            }
+        }
+
+        // ============================================================
+        // CARGAR ESTADÍSTICAS DE LA BASE DE DATOS
+        // ============================================================
+        async function cargarEstadisticasBD() {
+            try {
+                const { count, error } = await supabase
+                    .from('preguntas')
+                    .select('*', { count: 'exact', head: true });
+
+                if (error) {
+                    document.getElementById('totalPreguntas').textContent = 'Error';
+                    console.error('Error al contar preguntas:', error);
+                    return;
+                }
+
+                document.getElementById('totalPreguntas').textContent = count || 0;
+            } catch (e) {
+                document.getElementById('totalPreguntas').textContent = 'Error';
+            }
+        }
+
+        // ============================================================
+        // CARGAR LISTA DE PREGUNTAS
+        // ============================================================
+        async function cargarListaPreguntas() {
+            const contenedor = document.getElementById('listaPreguntas');
+
+            try {
+                const { data, error } = await supabase
+                    .from('preguntas')
+                    .select('*')
+                    .order('id', { ascending: false })
+                    .limit(20); // Mostrar las últimas 20
+
+                if (error) {
+                    contenedor.innerHTML = `<p style="color:#f44336;">Error al cargar: ${error.message}</p>`;
+                    return;
+                }
+
+                if (!data || data.length === 0) {
+                    contenedor.innerHTML = '<p style="color:#aaa;text-align:center;">No hay preguntas en la base de datos.</p>';
+                    return;
+                }
+
+                let html = `<p style="color:#888;margin-bottom:10px;font-size:13px;">
+                    Mostrando las últimas ${data.length} preguntas (de ${document.getElementById('totalPreguntas').textContent} totales)
+                </p>`;
+                html += '<table style="width:100%;border-collapse:collapse;font-size:13px;">';
+                html += `<thead><tr style="background:#667eea;color:white;">
+                    <th style="padding:8px 10px;text-align:left;">#</th>
+                    <th style="padding:8px 10px;text-align:left;">Pregunta</th>
+                    <th style="padding:8px 10px;text-align:left;">Correcta</th>
+                </tr></thead><tbody>`;
+
+                for (const p of data) {
+                    const texto = p.pregunta_texto.length > 60 
+                        ? p.pregunta_texto.substring(0, 60) + '...' 
+                        : p.pregunta_texto;
+                    html += `<tr style="border-bottom:1px solid #f0f0f0;">
+                        <td style="padding:8px 10px;color:#999;">${p.id}</td>
+                        <td style="padding:8px 10px;color:#444;">${texto}</td>
+                        <td style="padding:8px 10px;font-weight:700;color:#4caf50;">${p.respuesta_correcta}</td>
+                    </tr>`;
+                }
+
+                html += '</tbody></table>';
+                contenedor.innerHTML = html;
+
+            } catch (e) {
+                contenedor.innerHTML = `<p style="color:#f44336;">Error de conexión.</p>`;
+            }
+        }
+
+        // ============================================================
+        // VACIAR BASE DE DATOS
+        // ============================================================
+        async function vaciarBD() {
+            if (!confirm('⚠️ ¿Estás seguro de que quieres ELIMINAR TODAS las preguntas de la base de datos? Esta acción no se puede deshacer.')) {
+                return;
+            }
+
+            if (!confirm('⚠️⚠️ ¿Realmente estás seguro? Se eliminarán TODAS las preguntas.')) {
+                return;
+            }
+
+            try {
+                // Supabase no permite DELETE sin filtro en tablas sin RLS.
+                // Estrategia: obtener todos los IDs y eliminarlos en lotes
+                const { data, error } = await supabase
+                    .from('preguntas')
+                    .select('id');
+
+                if (error) {
+                    alert('Error al obtener preguntas para eliminar: ' + error.message);
+                    return;
+                }
+
+                if (!data || data.length === 0) {
+                    alert('No hay preguntas para eliminar.');
+                    return;
+                }
+
+                // Eliminar en lotes de 50
+                const ids = data.map(p => p.id);
+                const loteSize = 50;
+                let eliminados = 0;
+
+                for (let i = 0; i < ids.length; i += loteSize) {
+                    const loteIds = ids.slice(i, i + loteSize);
+                    const { error: delError } = await supabase
+                        .from('preguntas')
+                        .delete()
+                        .in('id', loteIds);
+
+                    if (delError) {
+                        throw new Error(delError.message);
+                    }
+                    eliminados += loteIds.length;
+                }
+
+                alert(`✅ Se eliminaron ${eliminados} preguntas de la base de datos.`);
+                await cargarEstadisticasBD();
+                await cargarListaPreguntas();
+
+            } catch (e) {
+                alert('Error al vaciar la base de datos: ' + e.message);
+            }
+        }
+
+        console.log('🔧 ExamenApp - Panel de Administración cargado correctamente.');
+    </script>
+
+</body>
+</html>

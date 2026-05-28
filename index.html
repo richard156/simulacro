@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ExamenApp - Iniciar Sesión</title>
+
+    <!-- ============================================================
+         ESTILOS
+         ============================================================ -->
+    <style>
+        /* ---------- RESET & GLOBAL ---------- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+
+        /* ---------- TARJETA PRINCIPAL ---------- */
+        .card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            width: 100%;
+            max-width: 420px;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card h1 {
+            text-align: center;
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .card .subtitulo {
+            text-align: center;
+            color: #888;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+
+        /* ---------- LOGO O ICONO ---------- */
+        .logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .logo .icono {
+            font-size: 60px;
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* ---------- PESTAÑAS (Login / Registro) ---------- */
+        .tabs {
+            display: flex;
+            margin-bottom: 25px;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 2px solid #e0e0e0;
+        }
+
+        .tabs button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+            background: #f5f5f5;
+            color: #888;
+            transition: all 0.3s ease;
+        }
+
+        .tabs button.activo {
+            background: #667eea;
+            color: white;
+        }
+
+        .tabs button:not(.activo):hover {
+            background: #e8e8e8;
+        }
+
+        /* ---------- FORMULARIOS ---------- */
+        .formulario {
+            display: none;
+        }
+
+        .formulario.activo {
+            display: block;
+        }
+
+        .campo {
+            margin-bottom: 20px;
+        }
+
+        .campo label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: #555;
+            font-size: 14px;
+        }
+
+        .campo input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: border-color 0.3s ease;
+            outline: none;
+            font-family: inherit;
+        }
+
+        .campo input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15);
+        }
+
+        /* ---------- BOTONES ---------- */
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .btn-primario {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primario:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+        }
+
+        .btn-primario:active {
+            transform: translateY(0);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* ---------- MENSAJES ---------- */
+        .mensaje {
+            margin-top: 15px;
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 14px;
+            display: none;
+            text-align: center;
+        }
+
+        .mensaje.error {
+            display: block;
+            background: #fff0f0;
+            color: #d32f2f;
+            border: 1px solid #ffcdd2;
+        }
+
+        .mensaje.exito {
+            display: block;
+            background: #f0fff4;
+            color: #2e7d32;
+            border: 1px solid #c8e6c9;
+        }
+
+        .mensaje.info {
+            display: block;
+            background: #e3f2fd;
+            color: #1565c0;
+            border: 1px solid #bbdefb;
+        }
+
+        /* ---------- SPINNER DE CARGA ---------- */
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.6s ease infinite;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ---------- ENLACE ADMIN ---------- */
+        .admin-link {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 13px;
+            color: #aaa;
+        }
+
+        .admin-link a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .admin-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* ---------- RESPONSIVE ---------- */
+        @media (max-width: 480px) {
+            .card {
+                padding: 25px 20px;
+                border-radius: 15px;
+            }
+
+            .card h1 {
+                font-size: 22px;
+            }
+
+            .logo .icono {
+                font-size: 45px;
+            }
+
+            .campo input {
+                padding: 12px 14px;
+                font-size: 14px;
+            }
+
+            .btn {
+                padding: 12px;
+                font-size: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ============================================================
+    TARJETA PRINCIPAL
+    ============================================================ -->
+    <div class="card">
+        
+        <!-- Logo -->
+        <div class="logo">
+            <span class="icono">📝</span>
+        </div>
+
+        <h1>ExamenApp</h1>
+        <p class="subtitulo">Plataforma de estudio con flashcards</p>
+
+        <!-- Pestañas -->
+        <div class="tabs">
+            <button id="btnLoginTab" class="activo" onclick="mostrarFormulario('login')">Iniciar Sesión</button>
+            <button id="btnRegistroTab" onclick="mostrarFormulario('registro')">Registrarse</button>
+        </div>
+
+        <!-- ============================================================
+        FORMULARIO DE INICIO DE SESIÓN
+        ============================================================ -->
+        <div id="formLogin" class="formulario activo">
+            <div class="campo">
+                <label for="loginEmail">Correo electrónico</label>
+                <input type="email" id="loginEmail" placeholder="ejemplo@correo.com" autocomplete="email" required>
+            </div>
+            <div class="campo">
+                <label for="loginPassword">Contraseña</label>
+                <input type="password" id="loginPassword" placeholder="Tu contraseña" autocomplete="current-password" required>
+            </div>
+            <button id="btnLogin" class="btn btn-primario" onclick="iniciarSesion()">Iniciar Sesión</button>
+            <div id="mensajeLogin" class="mensaje"></div>
+        </div>
+
+        <!-- ============================================================
+        FORMULARIO DE REGISTRO
+        ============================================================ -->
+        <div id="formRegistro" class="formulario">
+            <div class="campo">
+                <label for="regEmail">Correo electrónico</label>
+                <input type="email" id="regEmail" placeholder="ejemplo@correo.com" autocomplete="email" required>
+            </div>
+            <div class="campo">
+                <label for="regPassword">Contraseña (mín. 6 caracteres)</label>
+                <input type="password" id="regPassword" placeholder="Crea una contraseña segura" autocomplete="new-password" required>
+            </div>
+            <div class="campo">
+                <label for="regConfirm">Confirmar contraseña</label>
+                <input type="password" id="regConfirm" placeholder="Repite la contraseña" autocomplete="new-password" required>
+            </div>
+            <button id="btnRegistro" class="btn btn-primario" onclick="registrarse()">Crear Cuenta</button>
+            <div id="mensajeRegistro" class="mensaje"></div>
+        </div>
+
+        <!-- Enlace al panel admin -->
+        <div class="admin-link">
+            <a href="admin.html">🔧 Panel de Administración</a>
+        </div>
+
+    </div>
+
+    <!-- ============================================================
+    SCRIPTS
+    ============================================================ -->
+    <!-- Supabase JS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    
+    <!-- Configuración -->
+    <script src="config.js"></script>
+
+    <script>
+        // ============================================================
+        // VERIFICACIÓN DE DOMINIO (Protección anti-clonación)
+        // ============================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!verificarDominio()) {
+                document.body.innerHTML = `
+                    <div style="text-align:center;padding:40px;font-family:sans-serif;">
+                        <h1 style="color:#d32f2f;">🔒 Acceso Denegado</h1>
+                        <p style="color:#666;margin-top:20px;font-size:18px;">
+                            Esta aplicación no está autorizada para ejecutarse en este dominio.
+                        </p>
+                        <p style="color:#999;margin-top:10px;">
+                            Solo funciona en dominios autorizados (GitHub Pages).
+                        </p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Verificar si ya hay una sesión activa
+            verificarSesionActiva();
+        });
+
+        // ============================================================
+        // FUNCIONES DE INTERFAZ
+        // ============================================================
+
+        /** Cambia entre pestañas de Login y Registro */
+        function mostrarFormulario(tipo) {
+            // Actualizar pestañas
+            document.getElementById('btnLoginTab').classList.toggle('activo', tipo === 'login');
+            document.getElementById('btnRegistroTab').classList.toggle('activo', tipo === 'registro');
+
+            // Mostrar formulario correspondiente
+            document.getElementById('formLogin').classList.toggle('activo', tipo === 'login');
+            document.getElementById('formRegistro').classList.toggle('activo', tipo === 'registro');
+
+            // Limpiar mensajes
+            document.getElementById('mensajeLogin').className = 'mensaje';
+            document.getElementById('mensajeRegistro').className = 'mensaje';
+        }
+
+        /** Muestra un mensaje en el formulario especificado */
+        function mostrarMensaje(formulario, texto, tipo) {
+            const elemento = document.getElementById(formulario === 'login' ? 'mensajeLogin' : 'mensajeRegistro');
+            elemento.textContent = texto;
+            elemento.className = 'mensaje ' + tipo;
+        }
+
+        /** Activa/desactiva el botón y muestra spinner */
+        function setCargando(formulario, cargando) {
+            const btnId = formulario === 'login' ? 'btnLogin' : 'btnRegistro';
+            const btn = document.getElementById(btnId);
+            btn.disabled = cargando;
+            if (cargando) {
+                btn.innerHTML = '<span class="spinner"></span> Procesando...';
+            } else {
+                btn.innerHTML = formulario === 'login' ? 'Iniciar Sesión' : 'Crear Cuenta';
+            }
+        }
+
+        // ============================================================
+        // FUNCIONES DE AUTENTICACIÓN
+        // ============================================================
+
+        /** Verifica si ya hay una sesión activa y redirige */
+        async function verificarSesionActiva() {
+            try {
+                const { data: { session }, error } = await supabase.auth.getSession();
+                if (session) {
+                    // Sesión activa → ir a la app
+                    window.location.href = 'app.html';
+                }
+            } catch (e) {
+                console.log('No hay sesión activa');
+            }
+        }
+
+        /** Iniciar sesión con email y contraseña */
+        async function iniciarSesion() {
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+
+            // Validaciones
+            if (!email || !password) {
+                mostrarMensaje('login', 'Por favor completa todos los campos.', 'error');
+                return;
+            }
+
+            if (!email.includes('@')) {
+                mostrarMensaje('login', 'Ingresa un correo electrónico válido.', 'error');
+                return;
+            }
+
+            setCargando('login', true);
+
+            try {
+                const { data, error } = await supabase.auth.signInWithPassword({
+                    email: email,
+                    password: password,
+                });
+
+                if (error) {
+                    // Traducir errores comunes
+                    let mensaje = error.message;
+                    if (error.message.includes('Invalid login credentials')) {
+                        mensaje = 'Correo o contraseña incorrectos.';
+                    } else if (error.message.includes('Email not confirmed')) {
+                        mensaje = 'Por favor confirma tu correo electrónico antes de iniciar sesión. Revisa tu bandeja de entrada.';
+                    }
+                    mostrarMensaje('login', mensaje, 'error');
+                    setCargando('login', false);
+                    return;
+                }
+
+                mostrarMensaje('login', '✅ Inicio de sesión exitoso. Redirigiendo...', 'exito');
+
+                // Redirigir a la aplicación principal
+                setTimeout(() => {
+                    window.location.href = 'app.html';
+                }, 800);
+
+            } catch (e) {
+                mostrarMensaje('login', 'Error de conexión. Intenta de nuevo.', 'error');
+                setCargando('login', false);
+            }
+        }
+
+        /** Registrar un nuevo usuario */
+        async function registrarse() {
+            const email = document.getElementById('regEmail').value.trim();
+            const password = document.getElementById('regPassword').value;
+            const confirm = document.getElementById('regConfirm').value;
+
+            // Validaciones
+            if (!email || !password || !confirm) {
+                mostrarMensaje('registro', 'Por favor completa todos los campos.', 'error');
+                return;
+            }
+
+            if (!email.includes('@')) {
+                mostrarMensaje('registro', 'Ingresa un correo electrónico válido.', 'error');
+                return;
+            }
+
+            if (password.length < 6) {
+                mostrarMensaje('registro', 'La contraseña debe tener al menos 6 caracteres.', 'error');
+                return;
+            }
+
+            if (password !== confirm) {
+                mostrarMensaje('registro', 'Las contraseñas no coinciden.', 'error');
+                return;
+            }
+
+            setCargando('registro', true);
+
+            try {
+                const { data, error } = await supabase.auth.signUp({
+                    email: email,
+                    password: password,
+                });
+
+                if (error) {
+                    let mensaje = error.message;
+                    if (error.message.includes('already registered')) {
+                        mensaje = 'Este correo ya está registrado. Intenta iniciar sesión.';
+                    }
+                    mostrarMensaje('registro', mensaje, 'error');
+                    setCargando('registro', false);
+                    return;
+                }
+
+                // Registro exitoso
+                mostrarMensaje('registro',
+                    '✅ Cuenta creada con éxito.' + 
+                    (data.user && data.user.identities && data.user.identities.length === 0 
+                        ? ' El correo ya estaba registrado. Inicia sesión.' 
+                        : ' Revisa tu correo para confirmar tu cuenta (si tienes confirmación habilitada).'),
+                    'exito'
+                );
+
+                // Si la confirmación de email no está habilitada, iniciar sesión automáticamente
+                if (data.session) {
+                    setTimeout(() => {
+                        window.location.href = 'app.html';
+                    }, 1500);
+                }
+
+                setCargando('registro', false);
+
+            } catch (e) {
+                mostrarMensaje('registro', 'Error de conexión. Intenta de nuevo.', 'error');
+                setCargando('registro', false);
+            }
+        }
+
+        // ============================================================
+        // PERMITIR ENVIAR CON TECLA ENTER
+        // ============================================================
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                const loginActivo = document.getElementById('formLogin').classList.contains('activo');
+                if (loginActivo) {
+                    iniciarSesion();
+                } else {
+                    registrarse();
+                }
+            }
+        });
+
+        console.log('🔐 ExamenApp - Página de autenticación cargada correctamente.');
+    </script>
+
+</body>
+</html>
